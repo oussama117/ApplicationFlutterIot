@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/ProfileScreen.dart';
-import 'screens/splash.dart'; // Ajoutez l'import de votre SplashScreen
-// import 'screens/sheep_profile_screen.dart';
-
-// import 'screens/add_user_screen.dart';
+import 'screens/splash.dart';
 
 void main() {
   runApp(const MyApp());
