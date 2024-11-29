@@ -471,48 +471,56 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                               'Necklace',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 0, 0, 0)),
+                                  color: Color.fromARGB(255, 0, 140, 255)),
                             )),
                             DataColumn(
                                 label: Text('Age',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Race',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Health',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Weight',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Vaccinated',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Update',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Delete',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                             DataColumn(
                                 label: Text('Profile',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0)))),
+                                        color:
+                                            Color.fromARGB(255, 0, 140, 255)))),
                           ],
                           rows: _sheepList.map((sheep) {
                             return DataRow(
