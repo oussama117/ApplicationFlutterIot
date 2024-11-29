@@ -27,52 +27,15 @@ class HomeScreen extends StatelessWidget {
               // Implémentez la recherche si nécessaire
             },
           ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'profile') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileScreen()),
-                );
-              } else if (value == 'users' && role == 'admin') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserListScreen()),
-                );
-              } else if (value == 'sheep' && role == 'user') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ListOfSheepScreen()),
-                );
-              } else if (value == 'logout') {
-                logout(context);
-              }
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              logout(context);
             },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem(
-                  value: 'profile',
-                  child: Text('Profil'),
-                ),
-                if (role == 'admin')
-                  const PopupMenuItem(
-                    value: 'users',
-                    child: Text('List of user'),
-                  ),
-                if (role == 'user')
-                  const PopupMenuItem(
-                    value: 'sheep',
-                    child: Text('List of sheep'),
-                  ),
-                const PopupMenuItem(
-                  value: 'logout',
-                  child: Text('Logout'),
-                ),
-              ];
-            },
+            tooltip: 'Logout',
           ),
         ],
       ),
