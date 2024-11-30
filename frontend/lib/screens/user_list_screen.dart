@@ -133,39 +133,40 @@ class _UserListScreenState extends State<UserListScreen> {
                               DataColumn(label: Text('Last Name')),
                               DataColumn(label: Text('Email')),
                               DataColumn(label: Text('Role')),
-                              DataColumn(label: Text('Actions')),
+                              DataColumn(label: Text('delete')),
+                              DataColumn(label: Text('Update')),
                             ],
                             rows: _filteredUsers.map((user) {
                               return DataRow(
                                 cells: [
                                   DataCell(Text(user['name'],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold))),
-                                  DataCell(Text(user['lastName'],
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic))),
+                                  DataCell(Text(
+                                    user['lastName'],
+                                  )),
                                   DataCell(Text(user['email'])),
                                   DataCell(Text(user['role'],
-                                      style: TextStyle(color: Colors.blue))),
-                                  DataCell(Row(
-                                    children: [
-                                      // Delete button
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () =>
-                                            _deleteUser(user['_id']),
-                                        color: Colors.red,
-                                        tooltip: 'Delete',
-                                      ),
-                                      // Edit button
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () => _editUser(user['_id']),
-                                        color: Colors.blue,
-                                        tooltip: 'Edit',
-                                      ),
-                                    ],
-                                  )),
+                                      style:
+                                          const TextStyle(color: Colors.blue))),
+                                  DataCell(
+                                    // Delete button
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () => _deleteUser(user['_id']),
+                                      color: Colors.red,
+                                      tooltip: 'Delete',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    // Edit button
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => _editUser(user['_id']),
+                                      color: Colors.blue,
+                                      tooltip: 'Edit',
+                                    ),
+                                  ),
                                 ],
                               );
                             }).toList(),
@@ -176,8 +177,13 @@ class _UserListScreenState extends State<UserListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        shape: const CircleBorder(),
         onPressed: _addUser,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             // Drawer Header
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Colors.orange),
               child: Center(
                 child: Text(
                   'Menu',
@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
             ),
             // Drawer Menu Items
             ListTile(
-              leading: const Icon(Icons.person, color: Colors.blue),
+              leading: const Icon(Icons.person, color: Colors.orange),
               title: const Text('Profil'),
               onTap: () {
                 Navigator.push(
@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             ),
             if (role == 'admin')
               ListTile(
-                leading: const Icon(Icons.people, color: Colors.blue),
+                leading: const Icon(Icons.people, color: Colors.orange),
                 title: const Text('Liste of user'),
                 onTap: () {
                   Navigator.push(
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
               ),
             if (role == 'user')
               ListTile(
-                leading: const Icon(Icons.list, color: Colors.blue),
+                leading: const Icon(Icons.list, color: Colors.orange),
                 title: const Text('List of sheep'),
                 onTap: () {
                   Navigator.push(
@@ -106,15 +106,24 @@ class HomeScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              color: Colors.orange,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
+            icon: Icon(
+              Icons.list,
+              color: Colors.orange,
+            ),
             label: 'Liste',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(
+              Icons.person,
+              color: Colors.orange,
+            ),
             label: 'Profil',
           ),
         ],
