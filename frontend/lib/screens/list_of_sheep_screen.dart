@@ -186,7 +186,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                     children: [
                       Checkbox(
                         value: _isVaccinated,
-                        activeColor: const Color.fromARGB(255, 0, 140, 255),
+                        activeColor: Colors.orange,
                         onChanged: (bool? value) {
                           setState(() {
                             _isVaccinated = value ?? false;
@@ -216,8 +216,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                                 Radius.circular(10),
                               ),
                             ),
-                            backgroundColor:
-                                const Color.fromARGB(255, 0, 140, 255),
+                            backgroundColor: Colors.orange,
                           ),
                           onPressed: _submitSheepDetails,
                           child: const Text(
@@ -378,7 +377,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                     children: [
                       Checkbox(
                         value: _isVaccinated,
-                        activeColor: const Color.fromARGB(255, 0, 140, 255),
+                        activeColor: Colors.orange,
                         onChanged: (bool? value) {
                           setState(() {
                             _isVaccinated = value ?? false;
@@ -411,7 +410,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
               onPressed: () => Navigator.of(context).pop(),
               child: const Text(
                 'Cancel',
-                style: TextStyle(color: Color.fromARGB(255, 0, 140, 255)),
+                style: TextStyle(color: Colors.orange),
               ),
             ),
             ElevatedButton(
@@ -425,7 +424,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                     Radius.circular(10),
                   ),
                 ),
-                backgroundColor: const Color.fromARGB(255, 0, 140, 255),
+                backgroundColor: Colors.orange,
               ),
               onPressed: () => _updateSheepDetails(sheep.id),
               child: const Text(
@@ -452,7 +451,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 149, 255),
+                  color: Colors.orange,
                 ),
               ),
             ),
@@ -548,13 +547,15 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                                 DataCell(IconButton(
                                   icon: const Icon(
                                     Icons.align_vertical_bottom_sharp,
-                                    color: Color.fromARGB(255, 0, 140, 255),
+                                    color: Colors.orange,
                                   ),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (context) => SheepProfileScreen(
-                                          idNecklace: sheep.necklaceID),
+                                        idNecklace: sheep.necklaceID,
+                                        sheep: sheep,
+                                      ),
                                     ));
                                   },
                                 )),
@@ -567,7 +568,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(255, 0, 140, 255),
+        backgroundColor: Colors.orange,
         shape: const CircleBorder(),
         onPressed: _showAddSheepDialog,
         tooltip: 'Add Sheep',
