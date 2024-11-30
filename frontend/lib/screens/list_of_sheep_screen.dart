@@ -142,14 +142,28 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                 children: [
                   TextField(
                     controller: _necklaceIDController,
-                    decoration: const InputDecoration(labelText: 'Necklace ID'),
+                    decoration: const InputDecoration(
+                      labelText: 'Necklace ID',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                   ),
                   const SizedBox(
                     height: 16.0,
                   ),
                   TextField(
                     controller: _ageController,
-                    decoration: const InputDecoration(labelText: 'Age'),
+                    decoration: const InputDecoration(
+                      labelText: 'Age',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(
@@ -157,15 +171,28 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                   ),
                   TextField(
                     controller: _raceController,
-                    decoration: const InputDecoration(labelText: 'Race'),
+                    decoration: const InputDecoration(
+                      labelText: 'Race',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                   ),
                   const SizedBox(
                     height: 16.0,
                   ),
                   TextField(
                     controller: _healthStatusController,
-                    decoration:
-                        const InputDecoration(labelText: 'Health Status'),
+                    decoration: const InputDecoration(
+                      labelText: 'Health Status',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                   ),
                   const SizedBox(
                     height: 16.0,
@@ -174,7 +201,11 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                     controller: _weightController,
                     decoration: const InputDecoration(
                       labelText: 'Weight',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
                       // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
                     ),
                     keyboardType: TextInputType.number,
                   ),
@@ -336,14 +367,28 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                 children: [
                   TextField(
                     controller: _necklaceIDController,
-                    decoration: const InputDecoration(labelText: 'Necklace ID'),
+                    decoration: const InputDecoration(
+                      labelText: 'Necklace ID',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                   ),
                   const SizedBox(
                     height: 16.0,
                   ),
                   TextField(
                     controller: _ageController,
-                    decoration: const InputDecoration(labelText: 'Age'),
+                    decoration: const InputDecoration(
+                      labelText: 'Age',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(
@@ -351,22 +396,42 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                   ),
                   TextField(
                     controller: _raceController,
-                    decoration: const InputDecoration(labelText: 'Race'),
+                    decoration: const InputDecoration(
+                      labelText: 'Race',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                   ),
                   const SizedBox(
                     height: 16.0,
                   ),
                   TextField(
                     controller: _healthStatusController,
-                    decoration:
-                        const InputDecoration(labelText: 'Health Status'),
+                    decoration: const InputDecoration(
+                      labelText: 'Health Status',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                   ),
                   const SizedBox(
                     height: 16.0,
                   ),
                   TextField(
                     controller: _weightController,
-                    decoration: const InputDecoration(labelText: 'Weight'),
+                    decoration: const InputDecoration(
+                      labelText: 'Weight',
+                      floatingLabelStyle: TextStyle(color: Colors.orange),
+                      // border: OutlineInputBorder(),
+
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(

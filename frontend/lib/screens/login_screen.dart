@@ -166,12 +166,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                        labelText: 'Email',
-                        errorText: _errorMessage ==
-                                'Please enter a valid email address.'
-                            ? _errorMessage
-                            : null,
-                        border: const OutlineInputBorder()),
+                      labelText: 'Email',
+                      floatingLabelStyle: const TextStyle(color: Colors.orange),
+                      errorText:
+                          _errorMessage == 'Please enter a valid email address.'
+                              ? _errorMessage
+                              : null,
+                      border: const OutlineInputBorder(),
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {
                       if (_errorMessage != null) {
@@ -187,11 +191,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                        labelText: 'Password',
-                        errorText: _errorMessage == 'All fields are required.'
-                            ? _errorMessage
-                            : null,
-                        border: const OutlineInputBorder()),
+                      labelText: 'Password',
+                      floatingLabelStyle: const TextStyle(color: Colors.orange),
+                      errorText: _errorMessage == 'All fields are required.'
+                          ? _errorMessage
+                          : null,
+                      border: const OutlineInputBorder(),
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                    ),
                     onChanged: (value) {
                       if (_errorMessage != null) {
                         setState(() {
@@ -205,12 +213,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 35),
                   // Login button or loading indicator
                   _isLoading
-                      ? const CircularProgressIndicator()
+                      ? const Center(
+                          child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(
+                                color: Colors.orange,
+                              )),
+                        )
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 100,
+                              vertical: 20,
+                              horizontal: 10,
                             ),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5)),
