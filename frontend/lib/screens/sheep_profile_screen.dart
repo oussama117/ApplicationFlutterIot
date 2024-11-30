@@ -1,13 +1,16 @@
 import 'dart:async';
+// import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../services/necklace_api_service.dart'; // Replace with the actual import for your service
 import '../models/necklace_model.dart'; // Replace with the actual import for your data model
+import '../models/sheep_model.dart';
 
 class SheepProfileScreen extends StatefulWidget {
   final String idNecklace;
+  final Sheep sheep;
 
-  SheepProfileScreen({required this.idNecklace});
+  SheepProfileScreen({required this.idNecklace, required this.sheep});
 
   @override
   _SheepProfileScreenState createState() => _SheepProfileScreenState();
@@ -22,6 +25,7 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
   String movementStatus = '';
   String temperatureStatus = '';
   String heartRateStatus = '';
+  String generalStatus = '';
 
   Timer? _timer;
 
@@ -64,9 +68,12 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
             .map((item) => FlSpot(item.time.toDouble(), item.pulse))
             .toList();
 
+        // Update statuses
         movementStatus = _getMovementStatus(accelerationData, gyroscopeData);
         temperatureStatus = _getTemperatureStatus(temperatureData);
         heartRateStatus = _getHeartRateStatus(heartRateData);
+        generalStatus = _getGeneralStatus(
+            temperatureStatus, heartRateStatus, movementStatus);
 
         isLoading = false;
       });
@@ -79,6 +86,8 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
   }
 
   String _getMovementStatus(List<FlSpot> accData, List<FlSpot> gyrData) {
+    if (accData.isEmpty || gyrData.isEmpty) return 'No Data';
+
     final avgAcc =
         accData.map((e) => e.y).reduce((a, b) => a + b) / accData.length;
     final avgGyr =
@@ -90,6 +99,8 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
   }
 
   String _getTemperatureStatus(List<FlSpot> tempData) {
+    if (tempData.isEmpty) return 'No Data';
+
     final avgTemp =
         tempData.map((e) => e.y).reduce((a, b) => a + b) / tempData.length;
     if (avgTemp <= 26) return 'Low';
@@ -98,6 +109,8 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
   }
 
   String _getHeartRateStatus(List<FlSpot> pulseData) {
+    if (pulseData.isEmpty) return 'No Data';
+
     final avgPulse =
         pulseData.map((e) => e.y).reduce((a, b) => a + b) / pulseData.length;
     if (avgPulse < 75) return 'Low';
@@ -105,25 +118,290 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
     return 'Normal';
   }
 
+  String _getGeneralStatus(
+      String tempStatus, String pulseStatus, String movementStatus) {
+    if (tempStatus == 'Low' || pulseStatus == 'Low') {
+      return 'Sheep is Sick';
+    } else if (pulseStatus == 'High' && movementStatus == 'Running') {
+      return 'Sheep is Running';
+    } else if (movementStatus == 'Pausing' &&
+        (tempStatus == 'High' ||
+            tempStatus == 'Low' ||
+            pulseStatus == 'High' ||
+            pulseStatus == 'Low')) {
+      return 'Sheep is Unwell';
+    } else if (tempStatus == 'Normal' &&
+        pulseStatus == 'Normal' &&
+        movementStatus == 'Running') {
+      return 'Sheep is Well';
+    } else {
+      return 'Status Unknown';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sheep Profile: ${widget.idNecklace}'),
+        title: Text('Welcome Sheep Profile: ${widget.idNecklace}'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildStatusCard('Movement Status', movementStatus),
-                    _buildStatusCard('Temperature Status', temperatureStatus),
-                    _buildStatusCard('Heart Rate Status', heartRateStatus),
+                    const SizedBox(height: 16),
+                    // Combined status card
+                    Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      margin: const EdgeInsets.only(bottom: 16),
+                      elevation: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(18),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Sheep General Status",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Color.fromARGB(255, 0, 140, 255)),
+                            ),
+                            const SizedBox(
+                              height: 18,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Sheep ID',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.id,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Sheep necklace ID',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.necklaceID,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Sheep age',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.age,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Sheep Race',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.race,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Sheep Weight',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.weight,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Sheep Vaccination',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.vaccinated
+                                          ? 'Vaccinated'
+                                          : 'Not Vaccinated',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Sheep general health',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.sheep.healthStatus,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'General Present Status',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      generalStatus,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Movement Status',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      movementStatus,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: _getStatusColor(movementStatus),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Temperature Status',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      temperatureStatus,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            _getStatusColor(temperatureStatus),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    const Text(
+                                      'Heart Rate Status',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color.fromARGB(226, 0, 0, 0),
+                                      ),
+                                    ),
+                                    Text(
+                                      heartRateStatus,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: _getStatusColor(heartRateStatus),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
+                const Text(
+                  "Sheep Chart Presentation",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 0, 140, 255),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 _buildMovementChartCard(
                     'Movement', accelerationData, gyroscopeData),
                 _buildChartCard('Temperature', temperatureData),
@@ -133,42 +411,14 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
     );
   }
 
-  Widget _buildStatusCard(String title, String status) {
-    Color statusColor = Colors.green; // Default color for 'Normal'
-
-    // Check the status for heart rate and temperature and change color
-    if (title == 'Heart Rate Status') {
-      if (status == 'Low' || status == 'High') {
-        statusColor = Colors.red;
-      } else {
-        statusColor = Colors.green;
-      }
-    } else if (title == 'Temperature Status') {
-      if (status == 'Low' || status == 'High') {
-        statusColor = Colors.red;
-      } else {
-        statusColor = Colors.green;
-      }
-    } else if (title == 'Movement Status') {
-      // Movement status does not change color based on a specific value
-      statusColor = Colors.black;
+  // Helper function to get the color for each status
+  Color _getStatusColor(String status) {
+    if (status == 'Low' || status == 'High') {
+      return Colors.red;
+    } else if (status == 'Normal' || status == 'Running') {
+      return Colors.green;
     }
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          '$title: $status',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: statusColor,
-          ),
-        ),
-      ),
-    );
+    return Colors.black;
   }
 
   Widget _buildMovementChartCard(
@@ -181,9 +431,48 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'acceleration: ${accData.last.y}, gyroscope: ${gyrData.last.y}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Row(
+                  children: [
+                    Card(
+                      color: Colors.blue,
+                      child: SizedBox(
+                        width: 30,
+                        height: 10,
+                      ),
+                    ),
+                    Text('Acceleration'),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Card(
+                      color: Colors.green,
+                      child: SizedBox(
+                        width: 30,
+                        height: 10,
+                      ),
+                    ),
+                    Text('Gyroscope'),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
             SizedBox(
               height: 250,
@@ -199,20 +488,21 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
                       ? [...accData.map((e) => e.y), ...gyrData.map((e) => e.y)]
                           .reduce((a, b) => a > b ? a : b)
                       : 0,
+                  gridData: const FlGridData(show: true),
+                  titlesData: const FlTitlesData(show: true),
+                  borderData: FlBorderData(show: true),
                   lineBarsData: [
                     LineChartBarData(
+                      spots: accData,
                       isCurved: true,
                       color: Colors.blue,
-                      spots: accData,
-                      dotData: const FlDotData(show: false),
-                      belowBarData: BarAreaData(show: false),
+                      barWidth: 2,
                     ),
                     LineChartBarData(
+                      spots: gyrData,
                       isCurved: true,
                       color: Colors.green,
-                      spots: gyrData,
-                      dotData: const FlDotData(show: false),
-                      belowBarData: BarAreaData(show: false),
+                      barWidth: 2,
                     ),
                   ],
                 ),
@@ -225,14 +515,12 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
   }
 
   Widget _buildChartCard(String title, List<FlSpot> data) {
-    Color chartColor = Colors.orange;
-
+    Color lineColor;
     if (title == 'Heart Rate') {
-      chartColor = Colors.orange;
+      lineColor = Colors.orange;
     } else {
-      chartColor = Colors.purple;
+      lineColor = Colors.purple;
     }
-
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 10,
@@ -241,9 +529,40 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  title == 'Heart Rate'
+                      ? '${data.last.y} Bpm'
+                      : '${data.last.y} °C',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Card(
+                      color: lineColor,
+                      child: const SizedBox(
+                        width: 30,
+                        height: 10,
+                      ),
+                    ),
+                    Text(title),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
             SizedBox(
               height: 250,
@@ -257,11 +576,15 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
                   maxY: data.isNotEmpty
                       ? data.map((e) => e.y).reduce((a, b) => a > b ? a : b)
                       : 0,
+                  gridData: const FlGridData(show: true),
+                  titlesData: const FlTitlesData(show: true),
+                  borderData: FlBorderData(show: true),
                   lineBarsData: [
                     LineChartBarData(
-                      isCurved: true,
-                      color: chartColor,
                       spots: data,
+                      isCurved: true,
+                      color: lineColor,
+                      barWidth: 2,
                     ),
                   ],
                 ),

@@ -554,7 +554,9 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (context) => SheepProfileScreen(
-                                          idNecklace: sheep.necklaceID),
+                                        idNecklace: sheep.necklaceID,
+                                        sheep: sheep,
+                                      ),
                                     ));
                                   },
                                 )),
