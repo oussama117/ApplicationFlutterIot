@@ -1,3 +1,5 @@
+// import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
@@ -131,66 +133,109 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Email field
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                errorText:
-                    _errorMessage == 'Please enter a valid email address.'
-                        ? _errorMessage
-                        : null,
-              ),
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (value) {
-                if (_errorMessage != null) {
-                  setState(() {
-                    _errorMessage = null;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 10),
-            // Password field
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                errorText: _errorMessage == 'All fields are required.'
-                    ? _errorMessage
-                    : null,
-              ),
-              onChanged: (value) {
-                if (_errorMessage != null) {
-                  setState(() {
-                    _errorMessage = null;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            // Login button or loading indicator
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _login,
-                    child: const Text('Login'),
+      // appBar: AppBar(title: const Text('Login')),
+      body: Container(
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/img/background1.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Container(
+              width: 350,
+              decoration: const BoxDecoration(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // const Text(
+                  //   'Sign in',
+                  //   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  // ),
+                  Image.asset(
+                    'assets/img/profile.png',
+                    height: 150,
                   ),
-            const SizedBox(height: 10),
-            // Display error message if any
-            if (_errorMessage != null)
-              Text(
-                _errorMessage!,
-                style: const TextStyle(color: Colors.red),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                        labelText: 'Email',
+                        errorText: _errorMessage ==
+                                'Please enter a valid email address.'
+                            ? _errorMessage
+                            : null,
+                        border: const OutlineInputBorder()),
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (value) {
+                      if (_errorMessage != null) {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // Password field
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        labelText: 'Password',
+                        errorText: _errorMessage == 'All fields are required.'
+                            ? _errorMessage
+                            : null,
+                        border: const OutlineInputBorder()),
+                    onChanged: (value) {
+                      if (_errorMessage != null) {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Contact your admin for account data'),
+                  const SizedBox(height: 35),
+                  // Login button or loading indicator
+                  _isLoading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 100,
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            backgroundColor: Colors.orange,
+                          ),
+                          onPressed: _login,
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                  const SizedBox(height: 10),
+                  // Display error message if any
+                  if (_errorMessage != null)
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                ],
               ),
-          ],
+            ),
+          ),
         ),
       ),
     );
