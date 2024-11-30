@@ -170,7 +170,7 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
-                                  color: Color.fromARGB(255, 0, 140, 255)),
+                                  color: Colors.orange),
                             ),
                             const SizedBox(
                               height: 18,
@@ -398,7 +398,7 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Color.fromARGB(255, 0, 140, 255),
+                    color: Colors.orange,
                   ),
                 ),
                 const SizedBox(height: 16),

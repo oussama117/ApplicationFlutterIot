@@ -133,36 +133,40 @@ class _UserListScreenState extends State<UserListScreen> {
                               DataColumn(label: Text('Last Name')),
                               DataColumn(label: Text('Email')),
                               DataColumn(label: Text('Role')),
-                              DataColumn(label: Text('Actions')),
+                              DataColumn(label: Text('delete')),
+                              DataColumn(label: Text('Update')),
                             ],
                             rows: _filteredUsers.map((user) {
                               return DataRow(
                                 cells: [
                                   DataCell(Text(user['name'],
-                                      style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataCell(Text(user['lastName'],
-                                      style: TextStyle(fontStyle: FontStyle.italic))),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                                  DataCell(Text(
+                                    user['lastName'],
+                                  )),
                                   DataCell(Text(user['email'])),
                                   DataCell(Text(user['role'],
-                                      style: TextStyle(color: Colors.blue))),
-                                  DataCell(Row(
-                                    children: [
-                                      // Delete button
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () => _deleteUser(user['_id']),
-                                        color: Colors.red,
-                                        tooltip: 'Delete',
-                                      ),
-                                      // Edit button
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () => _editUser(user['_id']),
-                                        color: Colors.blue,
-                                        tooltip: 'Edit',
-                                      ),
-                                    ],
-                                  )),
+                                      style:
+                                          const TextStyle(color: Colors.blue))),
+                                  DataCell(
+                                    // Delete button
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () => _deleteUser(user['_id']),
+                                      color: Colors.red,
+                                      tooltip: 'Delete',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    // Edit button
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => _editUser(user['_id']),
+                                      color: Colors.blue,
+                                      tooltip: 'Edit',
+                                    ),
+                                  ),
                                 ],
                               );
                             }).toList(),
@@ -173,8 +177,13 @@ class _UserListScreenState extends State<UserListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        shape: const CircleBorder(),
         onPressed: _addUser,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -260,7 +269,8 @@ class _EditUserDialogState extends State<EditUserDialog> {
               child: Column(
                 children: [
                   if (_errorMessage.isNotEmpty)
-                    Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+                    Text(_errorMessage,
+                        style: const TextStyle(color: Colors.red)),
                   TextField(
                     controller: _nameController,
                     decoration: const InputDecoration(labelText: 'Name'),
@@ -294,11 +304,12 @@ class AddUserDialog extends StatefulWidget {
 
   static Future<bool> show(BuildContext context) async {
     return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const AddUserDialog();
-      },
-    ) ?? false;
+          context: context,
+          builder: (BuildContext context) {
+            return const AddUserDialog();
+          },
+        ) ??
+        false;
   }
 
   @override
@@ -309,7 +320,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();  
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _roleController = TextEditingController();
 
   bool _isLoading = false;
@@ -354,7 +365,8 @@ class _AddUserDialogState extends State<AddUserDialog> {
               child: Column(
                 children: [
                   if (_errorMessage.isNotEmpty)
-                    Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+                    Text(_errorMessage,
+                        style: const TextStyle(color: Colors.red)),
                   TextField(
                     controller: _nameController,
                     decoration: const InputDecoration(labelText: 'Name'),
