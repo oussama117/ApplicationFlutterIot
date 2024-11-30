@@ -100,81 +100,96 @@ class _UserListScreenState extends State<UserListScreen> {
       appBar: AppBar(
         title: const Text('User List'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search by Name',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+      body: Center(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 300,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    labelText: 'Search by Name',
+                    floatingLabelStyle: TextStyle(color: Colors.orange),
+                    // border: OutlineInputBorder(),
+                    prefixIcon: Icon(
+                      Icons.search,
+                    ),
+                    prefixIconColor: Colors.orange,
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.orange)),
+                  ),
+                ),
               ),
             ),
-          ),
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _errorMessage.isNotEmpty
-                  ? Center(
-                      child: Text(
-                        _errorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    )
-                  : Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
+            const SizedBox(
+              height: 50,
+            ),
+            _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage.isNotEmpty
+                    ? Center(
+                        child: Text(
+                          _errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      )
+                    : Expanded(
                         child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columns: const [
-                              DataColumn(label: Text('Name')),
-                              DataColumn(label: Text('Last Name')),
-                              DataColumn(label: Text('Email')),
-                              DataColumn(label: Text('Role')),
-                              DataColumn(label: Text('delete')),
-                              DataColumn(label: Text('Update')),
-                            ],
-                            rows: _filteredUsers.map((user) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(Text(user['name'],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                                  DataCell(Text(
-                                    user['lastName'],
-                                  )),
-                                  DataCell(Text(user['email'])),
-                                  DataCell(Text(user['role'],
-                                      style:
-                                          const TextStyle(color: Colors.blue))),
-                                  DataCell(
-                                    // Delete button
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () => _deleteUser(user['_id']),
-                                      color: Colors.red,
-                                      tooltip: 'Delete',
+                          scrollDirection: Axis.vertical,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              columns: const [
+                                DataColumn(label: Text('Name')),
+                                DataColumn(label: Text('Last Name')),
+                                DataColumn(label: Text('Email')),
+                                DataColumn(label: Text('Role')),
+                                DataColumn(label: Text('delete')),
+                                DataColumn(label: Text('Update')),
+                              ],
+                              rows: _filteredUsers.map((user) {
+                                return DataRow(
+                                  cells: [
+                                    DataCell(Text(user['name'],
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold))),
+                                    DataCell(Text(
+                                      user['lastName'],
+                                    )),
+                                    DataCell(Text(user['email'])),
+                                    DataCell(Text(user['role'],
+                                        style: const TextStyle(
+                                            color: Colors.blue))),
+                                    DataCell(
+                                      // Delete button
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () =>
+                                            _deleteUser(user['_id']),
+                                        color: Colors.red,
+                                        tooltip: 'Delete',
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    // Edit button
-                                    IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () => _editUser(user['_id']),
-                                      color: Colors.blue,
-                                      tooltip: 'Edit',
+                                    DataCell(
+                                      // Edit button
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () => _editUser(user['_id']),
+                                        color: Colors.blue,
+                                        tooltip: 'Edit',
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,
@@ -266,33 +281,88 @@ class _EditUserDialogState extends State<EditUserDialog> {
       content: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-                children: [
-                  if (_errorMessage.isNotEmpty)
-                    Text(_errorMessage,
-                        style: const TextStyle(color: Colors.red)),
-                  TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                  ),
-                  TextField(
-                    controller: _lastNameController,
-                    decoration: const InputDecoration(labelText: 'Last Name'),
-                  ),
-                  TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
-                  TextField(
-                    controller: _roleController,
-                    decoration: const InputDecoration(labelText: 'Role'),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _updateUser,
-                    child: const Text('Save'),
-                  ),
-                ],
+              child: Container(
+                width: 350,
+                child: Column(
+                  children: [
+                    if (_errorMessage.isNotEmpty)
+                      Text(_errorMessage,
+                          style: const TextStyle(color: Colors.red)),
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    TextField(
+                      controller: _lastNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Last Name',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    TextField(
+                      controller: _roleController,
+                      decoration: const InputDecoration(
+                        labelText: 'Role',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 30,
+                        ),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        backgroundColor: Colors.orange,
+                      ),
+                      onPressed: _updateUser,
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
     );
@@ -362,38 +432,95 @@ class _AddUserDialogState extends State<AddUserDialog> {
       content: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-                children: [
-                  if (_errorMessage.isNotEmpty)
-                    Text(_errorMessage,
-                        style: const TextStyle(color: Colors.red)),
-                  TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                  ),
-                  TextField(
-                    controller: _lastNameController,
-                    decoration: const InputDecoration(labelText: 'Last Name'),
-                  ),
-                  TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                  ),
-                  TextField(
-                    controller: _roleController,
-                    decoration: const InputDecoration(labelText: 'Role'),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _addUser,
-                    child: const Text('Add User'),
-                  ),
-                ],
+              child: Container(
+                width: 350,
+                child: Column(
+                  children: [
+                    if (_errorMessage.isNotEmpty)
+                      Text(_errorMessage,
+                          style: const TextStyle(color: Colors.red)),
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _lastNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Last Name',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _roleController,
+                      decoration: const InputDecoration(
+                        labelText: 'Role',
+                        floatingLabelStyle: TextStyle(color: Colors.orange),
+                        // border: OutlineInputBorder(),
+
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange)),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 30,
+                        ),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        backgroundColor: Colors.orange,
+                      ),
+                      onPressed: _addUser,
+                      child: const Text(
+                        'Add User',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
     );
