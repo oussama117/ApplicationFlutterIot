@@ -6,8 +6,7 @@ class ApiService {
   static const String baseUrl = "http://localhost:5000/api/users";
 
   // Méthode pour la connexion
-  static Future<Map<String, dynamic>> login(
-      String email, String password) async {
+  static Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
@@ -16,10 +15,7 @@ class ApiService {
       );
 
       // Logs pour le débogage
-      print("Request Body: ${jsonEncode({
-            'email': email,
-            'password': password
-          })}");
+      print("Request Body: ${jsonEncode({'email': email, 'password': password})}");
       print("Response Status Code: ${response.statusCode}");
       print("Response Body: ${response.body}");
 
@@ -100,8 +96,7 @@ class ApiService {
   }
 
   // Méthode pour mettre à jour un utilisateur
-  static Future<Map<String, dynamic>> updateUser(
-      String id, Map<String, String> updatedData) async {
+  static Future<Map<String, dynamic>> updateUser(String id, Map<String, String> updatedData) async {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/$id'),
@@ -166,5 +161,4 @@ class ApiService {
     } catch (e) {
       throw Exception('Error checking authentication: $e');
     }
-  }
-}
+  }}
