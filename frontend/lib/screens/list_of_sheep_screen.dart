@@ -13,12 +13,13 @@ class ListOfSheepScreen extends StatefulWidget {
 class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
   final SheepService _sheepService = SheepService();
   final List<Sheep> _sheepList = [];
-
+  List<Sheep> _filteredSheepList = [];
   final TextEditingController _necklaceIDController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
   final TextEditingController _healthStatusController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   bool _isLoading = false;
   bool _isVaccinated = false;
@@ -27,6 +28,8 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
   void initState() {
     super.initState();
     _fetchSheepList();
+    _filteredSheepList = _sheepList;
+    _searchController.addListener(_filterSheepList);
   }
 
   @override
@@ -51,6 +54,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
       setState(() {
         _sheepList.clear();
         _sheepList.addAll(fetchedList);
+        _filteredSheepList = List.from(_sheepList);
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,6 +65,16 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _filterSheepList() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredSheepList = _sheepList
+          .where((sheep) =>
+              sheep.necklaceID.toLowerCase().contains(query)) // Filter logic
+          .toList();
+    });
   }
 
   // Function to submit sheep details
@@ -446,6 +460,19 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
       body: Center(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  labelText: 'Search by Necklace ID',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
+            ),
             Container(
               child: const Text(
                 "Cheep List",
@@ -463,7 +490,8 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                 ? const CircularProgressIndicator()
                 : _sheepList.isEmpty
                     ? const Text('No sheep found')
-                    : SingleChildScrollView(
+                    : Expanded(
+                        child: SingleChildScrollView(
                         child: DataTable(
                           columns: const [
                             DataColumn(
@@ -514,7 +542,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                                         fontWeight: FontWeight.bold,
                                         color: Color.fromARGB(255, 0, 0, 0)))),
                           ],
-                          rows: _sheepList.map((sheep) {
+                          rows: _filteredSheepList.map((sheep) {
                             return DataRow(
                               cells: [
                                 DataCell(Text(sheep.necklaceID)),
@@ -564,7 +592,7 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                             );
                           }).toList(),
                         ),
-                      ),
+                      )),
           ],
         ),
       ),
