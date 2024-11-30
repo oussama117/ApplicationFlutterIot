@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 
@@ -12,8 +10,10 @@ class UserListScreen extends StatefulWidget {
 
 class _UserListScreenState extends State<UserListScreen> {
   List<dynamic> _users = [];
+  List<dynamic> _filteredUsers = [];
   bool _isLoading = true;
   String _errorMessage = '';
+  TextEditingController _searchController = TextEditingController();
 
   void _fetchUsers() async {
     setState(() {
@@ -25,11 +25,12 @@ class _UserListScreenState extends State<UserListScreen> {
       final users = await ApiService.getUsers();
       setState(() {
         _users = users;
+        _filteredUsers = users;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Erreur lors de la récupération des utilisateurs.';
+        _errorMessage = 'Error fetching users.';
         _isLoading = false;
       });
     }
@@ -44,11 +45,11 @@ class _UserListScreenState extends State<UserListScreen> {
       await ApiService.deleteUser(userId);
       _refreshUsers();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Utilisateur supprimé avec succès')),
+        const SnackBar(content: Text('User deleted successfully')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur : $e')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
@@ -73,70 +74,104 @@ class _UserListScreenState extends State<UserListScreen> {
     }
   }
 
+  void _searchUsers(String query) {
+    final filtered = _users.where((user) {
+      final name = user['name'].toLowerCase();
+      return name.contains(query.toLowerCase());
+    }).toList();
+
+    setState(() {
+      _filteredUsers = filtered;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _fetchUsers();
+    _searchController.addListener(() {
+      _searchUsers(_searchController.text);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Liste des utilisateurs'),
+        title: const Text('User List'),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _errorMessage.isNotEmpty
-              ? Center(
-                  child: Text(
-                    _errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                )
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Nom')),
-                      DataColumn(label: Text('Prénom')),
-                      DataColumn(label: Text('Email')),
-                      DataColumn(label: Text('Rôle')),
-                      DataColumn(label: Text('Actions')),
-                    ],
-                    rows: _users.map((user) {
-                      return DataRow(
-                        cells: [
-                          DataCell(Text(user['name'],
-                              style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataCell(Text(user['lastName'],
-                              style: TextStyle(fontStyle: FontStyle.italic))),
-                          DataCell(Text(user['email'])),
-                          DataCell(Text(user['role'],
-                              style: TextStyle(color: Colors.blue))),
-                          DataCell(Row(
-                            children: [
-                              // Bouton de suppression avec animation
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _deleteUser(user['_id']),
-                                color: Colors.red,
-                                tooltip: 'Supprimer',
-                              ),
-                              // Bouton de modification avec animation
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () => _editUser(user['_id']),
-                                color: Colors.blue,
-                                tooltip: 'Modifier',
-                              ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                labelText: 'Search by Name',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _errorMessage.isNotEmpty
+                  ? Center(
+                      child: Text(
+                        _errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    )
+                  : Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Name')),
+                              DataColumn(label: Text('Last Name')),
+                              DataColumn(label: Text('Email')),
+                              DataColumn(label: Text('Role')),
+                              DataColumn(label: Text('Actions')),
                             ],
-                          )),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                ),
+                            rows: _filteredUsers.map((user) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(Text(user['name'],
+                                      style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataCell(Text(user['lastName'],
+                                      style: TextStyle(fontStyle: FontStyle.italic))),
+                                  DataCell(Text(user['email'])),
+                                  DataCell(Text(user['role'],
+                                      style: TextStyle(color: Colors.blue))),
+                                  DataCell(Row(
+                                    children: [
+                                      // Delete button
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () => _deleteUser(user['_id']),
+                                        color: Colors.red,
+                                        tooltip: 'Delete',
+                                      ),
+                                      // Edit button
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () => _editUser(user['_id']),
+                                        color: Colors.blue,
+                                        tooltip: 'Edit',
+                                      ),
+                                    ],
+                                  )),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addUser,
         child: const Icon(Icons.add),
@@ -179,7 +214,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Erreur de chargement des données utilisateur.';
+        _errorMessage = 'Error loading user data.';
       });
     }
   }
@@ -202,11 +237,11 @@ class _EditUserDialogState extends State<EditUserDialog> {
       );
 
       if (updatedUser != null) {
-        Navigator.pop(context, true); // Modification réussie
+        Navigator.pop(context, true); // Update successful
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Erreur lors de la mise à jour de l\'utilisateur.';
+        _errorMessage = 'Error updating user.';
       });
     } finally {
       setState(() {
@@ -218,22 +253,21 @@ class _EditUserDialogState extends State<EditUserDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Modifier l\'utilisateur'),
+      title: const Text('Edit User'),
       content: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
                   if (_errorMessage.isNotEmpty)
-                    Text(_errorMessage,
-                        style: const TextStyle(color: Colors.red)),
+                    Text(_errorMessage, style: const TextStyle(color: Colors.red)),
                   TextField(
                     controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Nom'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
                   TextField(
                     controller: _lastNameController,
-                    decoration: const InputDecoration(labelText: 'Prénom'),
+                    decoration: const InputDecoration(labelText: 'Last Name'),
                   ),
                   TextField(
                     controller: _emailController,
@@ -241,12 +275,12 @@ class _EditUserDialogState extends State<EditUserDialog> {
                   ),
                   TextField(
                     controller: _roleController,
-                    decoration: const InputDecoration(labelText: 'Rôle'),
+                    decoration: const InputDecoration(labelText: 'Role'),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _updateUser,
-                    child: const Text('Sauvegarder'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
@@ -260,12 +294,11 @@ class AddUserDialog extends StatefulWidget {
 
   static Future<bool> show(BuildContext context) async {
     return await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const AddUserDialog();
-          },
-        ) ??
-        false;
+      context: context,
+      builder: (BuildContext context) {
+        return const AddUserDialog();
+      },
+    ) ?? false;
   }
 
   @override
@@ -276,8 +309,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController =
-      TextEditingController(); // Ajout du contrôleur pour le mot de passe
+  final TextEditingController _passwordController = TextEditingController();  
   final TextEditingController _roleController = TextEditingController();
 
   bool _isLoading = false;
@@ -299,11 +331,11 @@ class _AddUserDialogState extends State<AddUserDialog> {
       });
 
       if (newUser != null) {
-        Navigator.pop(context, true); // Utilisateur ajouté avec succès
+        Navigator.pop(context, true); // User added successfully
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Erreur lors de l\'ajout de l\'utilisateur.';
+        _errorMessage = 'Error adding user.';
       });
     } finally {
       setState(() {
@@ -315,42 +347,39 @@ class _AddUserDialogState extends State<AddUserDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Ajouter un utilisateur'),
+      title: const Text('Add User'),
       content: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
                   if (_errorMessage.isNotEmpty)
-                    Text(_errorMessage,
-                        style: const TextStyle(color: Colors.red)),
+                    Text(_errorMessage, style: const TextStyle(color: Colors.red)),
                   TextField(
                     controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Nom'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
                   TextField(
                     controller: _lastNameController,
-                    decoration: const InputDecoration(labelText: 'Prénom'),
+                    decoration: const InputDecoration(labelText: 'Last Name'),
                   ),
                   TextField(
                     controller: _emailController,
                     decoration: const InputDecoration(labelText: 'Email'),
                   ),
                   TextField(
-                    controller:
-                        _passwordController, // Champ pour le mot de passe
-                    obscureText: true, // Masquer le mot de passe
-                    decoration:
-                        const InputDecoration(labelText: 'Mot de passe'),
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: 'Password'),
                   ),
                   TextField(
                     controller: _roleController,
-                    decoration: const InputDecoration(labelText: 'Rôle'),
+                    decoration: const InputDecoration(labelText: 'Role'),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _addUser,
-                    child: const Text('Ajouter'),
+                    child: const Text('Add User'),
                   ),
                 ],
               ),
