@@ -22,12 +22,6 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Home'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Implémentez la recherche si nécessaire
-            },
-          ),
-          IconButton(
             icon: const Icon(
               Icons.logout,
               color: Colors.red,
