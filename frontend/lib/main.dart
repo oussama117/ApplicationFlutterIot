@@ -3,9 +3,25 @@ import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/ProfileScreen.dart';
 import 'screens/splash.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() {
-  runApp(const MyApp());
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initializeNotifications() async {
+  const AndroidInitializationSettings androidInitializationSettings =
+      AndroidInitializationSettings(
+          '@mipmap/ic_launcher'); // Replace with your app's icon
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: androidInitializationSettings);
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeNotifications();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,17 +35,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/splash', // Changer la route initiale pour le SplashScreen
+      initialRoute: '/splash', // Set the initial route to SplashScreen
       routes: {
-        '/splash': (context) =>const SplashScreen(), // Ajoutez la route pour SplashScreen
+        '/splash': (context) =>
+            const SplashScreen(), // Add the route for SplashScreen
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(role: 'user'),
         '/admin_home': (context) => const HomeScreen(role: 'admin'),
         '/Profile': (context) => const ProfileScreen(),
-        // Ajoutez d'autres routes nécessaires ici
+        // Add other necessary routes here
       },
-      // home: AddUserScreen(),
-      // home: SheepProfileScreen(),
     );
   }
 }

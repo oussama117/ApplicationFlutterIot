@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../services/necklace_api_service.dart'; // Replace with the actual import for your service
 import '../models/necklace_model.dart'; // Replace with the actual import for your data model
 import '../models/sheep_model.dart';
+import '../helpers/notification_helper.dart';
 
 class SheepProfileScreen extends StatefulWidget {
   final String idNecklace;
@@ -120,18 +121,21 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
         pulseStatus == 'Low' ||
         (movementStatus == 'Running' &&
             (tempStatus == 'High' || pulseStatus == 'High'))) {
+      showNotification(
+        'Health Alert',
+        'A sheep is showing signs of being sick. Please check its health!',
+      );
       return 'Sheep is Sick';
     } else if (tempStatus == 'High' &&
         pulseStatus == 'High' &&
         movementStatus == 'Running') {
       return 'Sheep is Running';
-    } else if (movementStatus == 'Pausing' &&
-        ((tempStatus == 'High' || tempStatus == 'Low') ||
-            (pulseStatus == 'High' || pulseStatus == 'Low') ||
-            (pulseStatus == 'Normal' &&
-                (tempStatus == 'Low' || tempStatus == 'Low')) ||
-            (tempStatus == 'Normal' &&
-                (pulseStatus == 'Low' || pulseStatus == 'High')))) {
+    } else if ((movementStatus != 'Running' && (tempStatus == 'High' || tempStatus == 'Low') || (pulseStatus == 'High' || pulseStatus == 'Low')) ||
+              (pulseStatus == 'Normal' && (tempStatus == 'Low' || tempStatus == 'Low')) || (tempStatus == 'Normal' && (pulseStatus == 'Low' || pulseStatus == 'High')))) {
+  showNotification(
+        'Health Alert',
+        'A sheep is showing signs of being unwell. Please check its health!',
+      );
       return 'Sheep is Unwell';
     } else if ((tempStatus == 'Normal' &&
             pulseStatus == 'Normal' &&
@@ -160,6 +164,7 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
+
                     // Combined status card
                     Card(
                       shape: RoundedRectangleBorder(
