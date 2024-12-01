@@ -22,17 +22,6 @@ class ProfileScreen extends StatelessWidget {
     };
   }
 
-  // Save user information to SharedPreferences
-  Future<void> saveUserInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName', 'John Doe');
-    await prefs.setString('userEmail', 'john.doe@example.com');
-    await prefs.setString('userRole', 'Admin');
-
-    // Debugging output to ensure data is saved
-    print('User Info Saved: John Doe, john.doe@example.com, Admin');
-  }
-
   // Logout function
   Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
