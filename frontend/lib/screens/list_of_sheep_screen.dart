@@ -385,7 +385,6 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
                       labelText: 'Necklace ID',
                       floatingLabelStyle: TextStyle(color: Colors.orange),
                       // border: OutlineInputBorder(),
-
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.orange)),
                     ),
@@ -526,14 +525,22 @@ class _ListOfSheepScreenState extends State<ListOfSheepScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  labelText: 'Search by Necklace ID',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                width: 350,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.orange,
+                    ),
+                    labelText: 'Search By Necklace',
+                    floatingLabelStyle: TextStyle(color: Colors.orange),
+                    // border: OutlineInputBorder(),
+
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.orange)),
                   ),
-                  suffixIcon: Icon(Icons.search),
                 ),
               ),
             ),
