@@ -89,56 +89,60 @@ class _SheepProfileScreenState extends State<SheepProfileScreen> {
   String _getMovementStatus(List<FlSpot> accData, List<FlSpot> gyrData) {
     if (accData.isEmpty || gyrData.isEmpty) return 'No Data';
 
-    final avgAcc =
-        accData.map((e) => e.y).reduce((a, b) => a + b) / accData.length;
-    final avgGyr =
-        gyrData.map((e) => e.y).reduce((a, b) => a + b) / gyrData.length;
+    //final avgAcc = accData.map((e) => e.y).reduce((a, b) => a + b) / accData.length;
+    //final avgGyr = gyrData.map((e) => e.y).reduce((a, b) => a + b) / gyrData.length;
 
-    if (avgAcc <= 1 || avgGyr <= 1) return 'Pausing';
-    if (avgAcc <= 3 || avgGyr <= 3) return 'Walking';
+    if (accData.last.y <= 1 || gyrData.last.y <= 1) return 'Pausing';
+    if (accData.last.y <= 3 || gyrData.last.y <= 3) return 'Walking';
     return 'Running';
   }
 
   String _getTemperatureStatus(List<FlSpot> tempData) {
     if (tempData.isEmpty) return 'No Data';
 
-    final avgTemp =
-        tempData.map((e) => e.y).reduce((a, b) => a + b) / tempData.length;
-    if (avgTemp <= 26) return 'Low';
-    if (avgTemp > 32) return 'High';
+    //final avgTemp = tempData.map((e) => e.y).reduce((a, b) => a + b) / tempData.length;
+    if (tempData.last.y <= 26) return 'Low';
+    if (tempData.last.y > 32) return 'High';
     return 'Normal';
   }
 
   String _getHeartRateStatus(List<FlSpot> pulseData) {
     if (pulseData.isEmpty) return 'No Data';
 
-    final avgPulse =
-        pulseData.map((e) => e.y).reduce((a, b) => a + b) / pulseData.length;
-    if (avgPulse < 75) return 'Low';
-    if (avgPulse > 95) return 'High';
+    //final avgPulse = pulseData.map((e) => e.y).reduce((a, b) => a + b) / pulseData.length;
+    if (pulseData.last.y < 75) return 'Low';
+    if (pulseData.last.y > 95) return 'High';
     return 'Normal';
   }
 
   String _getGeneralStatus(
       String tempStatus, String pulseStatus, String movementStatus) {
-    if (tempStatus == 'Low' || pulseStatus == 'Low') {
-      return 'Sheep is Sick';
-    } else if (pulseStatus == 'High' && movementStatus == 'Running') {
-      return 'Sheep is Running';
-    } else if (movementStatus == 'Pausing' &&
-        (tempStatus == 'High' ||
-            tempStatus == 'Low' ||
-            pulseStatus == 'High' ||
-            pulseStatus == 'Low')) {
+    if (tempStatus == 'Low' ||
+        pulseStatus == 'Low' ||
+        (movementStatus == 'Running' &&
+            (tempStatus == 'High' || pulseStatus == 'High'))) {
       showNotification(
+        'Health Alert',
+        'A sheep is showing signs of being sick. Please check its health!',
+      );
+      return 'Sheep is Sick';
+    } else if (tempStatus == 'High' &&
+        pulseStatus == 'High' &&
+        movementStatus == 'Running') {
+      return 'Sheep is Running';
+    } else if ((movementStatus != 'Running' && (tempStatus == 'High' || tempStatus == 'Low') || (pulseStatus == 'High' || pulseStatus == 'Low')) ||
+              (pulseStatus == 'Normal' && (tempStatus == 'Low' || tempStatus == 'Low')) || (tempStatus == 'Normal' && (pulseStatus == 'Low' || pulseStatus == 'High')))) {
+  showNotification(
         'Health Alert',
         'A sheep is showing signs of being unwell. Please check its health!',
       );
-
       return 'Sheep is Unwell';
-    } else if (tempStatus == 'Normal' &&
-        pulseStatus == 'Normal' &&
-        movementStatus == 'Running') {
+    } else if ((tempStatus == 'Normal' &&
+            pulseStatus == 'Normal' &&
+            movementStatus == 'Running') ||
+        (tempStatus == 'Normal' &&
+            pulseStatus == 'Normal' &&
+            movementStatus != 'Running')) {
       return 'Sheep is Well';
     } else {
       return 'Status Unknown';
